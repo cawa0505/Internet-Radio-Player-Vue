@@ -346,12 +346,12 @@
     </transition>
   </div>
 </template>
-<script>
+<script lang="ts">
 import { Howl, Howler } from "howler";
 export default {
   name: "Lobby",
   components: {},
-  data() {
+  data(): unknown {
     return {
       likedSationsObj: this.$store.state.likedStations,
       stationData: [],
@@ -374,16 +374,28 @@ export default {
       stations: [
         {
           id: 0,
-          title: "Mi-Soul",
-          src: "http://178.159.3.22:8177/;stream/1",
+          title: "Home Streming",
+          src: "http://172.29.224.30:8000/udoompd.ogg",
           playing: false,
           imageSrc:
-            "https://upload.wikimedia.org/wikipedia/en/c/cc/Mi-Soul_logo.png",
-          genres: "Soul R&B House Reggae Hip Hop Dance Soulful Music",
-          website: "http://mi-soul.com",
-          liked: false,
-          genre: "HipHop",
+            "https://w7.pngwing.com/pngs/173/127/png-transparent-geek-logo-graphy-others-photography-artwork-sales-thumbnail.png",
+          genres: "All",
+          website: "",
+          liked: true,
+          genre: "All",
         },
+        // {
+        //   id: 0,
+        //   title: "Mi-Soul",
+        //   src: "http://178.159.3.22:8177/;stream/1",
+        //   playing: false,
+        //   imageSrc:
+        //     "https://upload.wikimedia.org/wikipedia/en/c/cc/Mi-Soul_logo.png",
+        //   genres: "Soul R&B House Reggae Hip Hop Dance Soulful Music",
+        //   website: "http://mi-soul.com",
+        //   liked: false,
+        //   genre: "HipHop",
+        // },
         {
           id: 1,
           title: "Deep House Radio",
@@ -788,14 +800,14 @@ export default {
     },
   },
   methods: {
-    loadAudioSource() {
+    loadAudioSource(): void {
       var sound = new Howl({
         src: ["https://musicbird.leanstream.co/JCB068-MP3"],
         html5: true,
       });
       this.sound = sound;
     },
-    filterCategory(category) {
+    filterCategory(category: string): void {
       if (category === "Anime") {
         this.selectedGenre = "Anime";
       }
@@ -812,18 +824,18 @@ export default {
         this.selectedGenre = "Liked";
       }
     },
-    keyDownHandler(e) {
+    keyDownHandler(e: KeyboardEvent): void {
       if (e.keyCode === 32) {
         this.isRadioMuted(this.soundID);
       } else {
         return;
       }
     },
-    storeStationData(station, id) {
+    storeStationData(station: string, id: number): void {
       this.stationData = station;
       this.stationDataIndex = id;
     },
-    isRadioPaused() {
+    isRadioPaused(): void {
       if (this.stationData.length === 0) {
         console.log("No Station Selected");
         return;
@@ -844,7 +856,7 @@ export default {
       }
     },
     /* Check if radio is playing */
-    isRadioPlaying(stationSrc, isplaying, soundID, stationID) {
+    isRadioPlaying(stationSrc, isplaying, soundID, stationID): void {
       if (isplaying === false && this.radioStarted === false) {
         this.startRadio(stationSrc, stationID);
         this.playAudio();
@@ -863,7 +875,7 @@ export default {
       }
     },
     /* START Radio */
-    startRadio(stationSrc, stationID) {
+    startRadio(stationSrc: string, stationID: number): void {
       this.radioStarted = true;
       this.arrayID = stationID;
       this.stations[stationID].playing = true;
@@ -882,13 +894,13 @@ export default {
     },
 
     /* PAUSE Radio */
-    stopRadio(stationID) {
+    stopRadio(stationID: number) {
       this.stations[stationID].playing = false;
       (this.radioStarted = false), this.sound.unload();
       console.log("Radio Stopped");
     },
     /* MUTE Handler */
-    isRadioMuted(soundID) {
+    isRadioMuted(soundID: number): void {
       if (this.radioMuted === false) {
         this.muteRadio(soundID);
       } else {
@@ -896,7 +908,7 @@ export default {
       }
     },
     /* MUTE Radio */
-    muteRadio() {
+    muteRadio(): void {
       if (this.radioStarted === false) {
         return;
       } else {
@@ -905,16 +917,16 @@ export default {
       }
     },
     /* UNMUTE Radio */
-    unmuteRadio() {
+    unmuteRadio(): void {
       (this.radioMuted = false), this.sound.fade(0.0, this.volume, 1200);
       console.log("Radio Unmuted");
     },
     /* MUTE Radio instantly if u chose to mute before starting any station */
-    muteRadioOnStart() {
+    muteRadioOnStart(): void {
       this.sound.fade(this.volume, 0.0, 0);
     },
     /* Volume Slider */
-    volumeController() {
+    volumeController(): void {
       this.$store.commit("volumeSlider", this.volume);
       if (this.radioStarted === false) {
         return;
@@ -925,7 +937,7 @@ export default {
         this.sound.volume(this.volume);
       }
     },
-    likeStation(stationID) {
+    likeStation(stationID: number): void {
       if (!this.likedSationsObj[stationID]) {
         // Like a station
         this.stations[stationID].liked = true;
@@ -942,14 +954,14 @@ export default {
         this.$forceUpdate();
       }
     },
-    changeTitle(title) {
+    changeTitle(title: string): void {
       document.title = "Streaming" + " ~" + title + "~";
     },
     /* Visualizer Stuff */
-    unloadAll() {
+    unloadAll(): void {
       Howler.unload();
     },
-    playAudio() {
+    playAudio(): void {
       //  Howler.unload();
       this.initAudioVisualizer();
       console.log("Radio Started Playing");
@@ -957,7 +969,7 @@ export default {
       this.drawAudioVisualizer();
     },
 
-    initAudioVisualizer() {
+    initAudioVisualizer(): void {
       var AudioContext = window.AudioContext || window.webkitAudioContext;
 
       // Create an analyser node in the Howler WebAudio context
@@ -1000,7 +1012,7 @@ export default {
       this.gainNode = gainNode;
     },
 
-    drawAudioVisualizer() {
+    drawAudioVisualizer(): void {
       // Animation ends when gain reaches 0
       if (this.gainNode.gain.value === 0) {
         if (this.drawTimer) {
@@ -1028,7 +1040,7 @@ export default {
       );
     },
 
-    drawSvgPath(barWidth) {
+    drawSvgPath(barWidth: number): void {
       let d = "M";
       const frequency = this.frequency;
       frequency.forEach((y, i) => {

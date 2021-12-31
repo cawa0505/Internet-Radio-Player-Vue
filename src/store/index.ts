@@ -11,7 +11,7 @@ const vuexLocal = new VuexPersistence({
 export default new Vuex.Store({
   state: {
     volume: 1,
-    likedStations: {}
+    likedStations: [Number],
   },
   mutations: {
     volumeSlider(state, value) {
